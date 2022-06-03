@@ -1,28 +1,52 @@
 from pprint import pprint 
-from click import password_option
 import psycopg2
 
-def write(n, title, price, item, category, link, picturelink):
+class PostgreSQL_CRUD():
+    def __init__(self, host, port, dbname, user, password):
+        self.connect = psycopg2.connect(host=host, port=port, dbname = dbname, user=user, password=password)
+        self.cursor = self.connect.cursor()
+    
+    def __del__(self):
+        self.connect.close()
+        self.cursor.close()
+    
+    def execute(self, query):
+        self.cursor.execute(query)
+    def commit(self):
+        self.connect.commit()
+    
+    def create_table(self, table):
+        query = f'''create table {table} (
+            title varchar(255),
+            link varchar(255) unique,
+            img varchar(255),
+            tag varchar(16)[]
+        );'''
+        self.execute(query)
+        self.commit()
+        return table
 
-    table = "schema.table"
+    def insert(self, table, title, link, img, tag):
+        query = f"""insert into {table} (title, link, img, tag)
+            values('{title}', '{link}', '{img}', ARRAY['{tag[0]}','{tag[1]}','{tag[2]}'])
+            on conflict(link)
+            do nothing
+            """
+        try:
+            self.execute(query)
+            self.commit()
+        except psycopg2.DatabaseError as error:
+            print(error)
+            
+    def read(self, table):
+        query = f"""select * from {table}"""
+        self.execute(query)
+        return self.cursor.fetchall()
 
-    # DB 접속
-    try:
-        with psycopg2.connect(host="255.255.255.255", port="00000", dbname="dbname", user="user", password="password") as conn:
-            with conn.cursor() as cur:
-                #title과 link 중 하나라도 같으면 DB에 추가하지 않음
-                for i in range(n):
-                    cur.execute(f"""INSERT INTO {table} (TITLE, PRICE, ITEM, CATEGORY, LINK, PICTURELINK)
-                    VALUES ('{title[i]}', '{price[i]}', '{item[i]}', '{category[i]}', '{link[i]}', '{picturelink[i]}')
-                    ON CONFLICT (LINK)
-                    DO NOTHING
-                    """)
-                
-                cur.execute(f"select * from {table}" )
-                print(f"SELECT * FROM {table}")
-                pprint(cur.fetchall())
-    except psycopg2.DatabaseError as e:
-        print(e)
+        
 
+db = PostgreSQL_CRUD(host="255.255.255.255", port="00000",dbname="dbname", user="user",password="password")
+# db.create_table(table="date1")
+db.insert("date1", '제목2', '링크2','이미지2',['태그21', '태그22','태그23'])
 
-#write(1,['title5'], [20], ['Galaxy tab S8 Ultra'], ['Tablet'], ['http://...0'], ['https://picture...']) 
+pprint(db.read("date1"))
