@@ -1,21 +1,19 @@
 #!/usr/bin/python
 
-import re
-import requests
-from bs4 import BeautifulSoup
-from konlpy.tag import Twitter
+import spacy
 
 def hfilter(s):
     return re.sub(u'[^ \.\,\?\!\u3130-\u318f\uac00-\ud7a3]+','',s)
 
-def filter(list):
-    posTagger = Twitter()
-    word = []
+def filter(str):
     
-    p_entry = hfilter(list)
-    p_entry2 = posTagger.pos(p_entry)
+    word = []
+    nlp = spacy.load("ko_core_news_sm")
+    p_entry = hfilter(str)
+    doc = nlp(str)
+    p_entry2 = list(doc)
     for i in p_entry2:
-        if i[1]=="Noun":
-            word.append(i[0])
+        if i.pos_=="NOUN":
+            word.append(i)
     
     return word
