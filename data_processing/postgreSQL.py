@@ -14,7 +14,7 @@ class PostgreSQL_CRUD():
         self.cursor.execute(query)
     def commit(self):
         self.connect.commit()
-    
+
     def create_table(self, schema, table):
         query = f'''create table {schema}.{table} (
             title varchar(255),
@@ -44,8 +44,9 @@ class PostgreSQL_CRUD():
         self.execute(query)
         return self.cursor.fetchall()
 
+
 #example
-db = PostgreSQL_CRUD(host="13.72.102.220", port="5432",dbname="youtube_trend", user="admin",password="qwe123")
+db = PostgreSQL_CRUD(host="255.255.255.255", port="00000",dbname="dbname", user="user",password="password")
 
 #schema는 db에 미리 설정
 db.create_table(schema= "KR",table="tablename")
