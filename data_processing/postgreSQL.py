@@ -1,28 +1,53 @@
 from pprint import pprint 
-from click import password_option
 import psycopg2
 
-def write(n, title, price, item, category, link, picturelink):
+class PostgreSQL_CRUD():
+    def __init__(self, host, port, dbname, user, password):
+        self.connect = psycopg2.connect(host=host, port=port, dbname = dbname, user=user, password=password)
+        self.cursor = self.connect.cursor()
+    
+    def __del__(self):
+        self.connect.close()
+        self.cursor.close()
+    
+    def execute(self, query):
+        self.cursor.execute(query)
+    def commit(self):
+        self.connect.commit()
+    
+    def create_table(self, schema, table):
+        query = f'''create table {schema}.{table} (
+            title varchar(255),
+            link varchar(255) unique,
+            img varchar(255),
+            tag varchar(16)[],
+            tag_weight real[]
+        );'''
+        self.execute(query)
+        self.commit()
+        return f"{schema}.{table}"
 
-    table = "schema.table"
+    def insert(self, schema, table, title, link, img, tags):
+        query = f"""insert into {schema}.{table} (title, link, img, tag, tag_weight)
+            values('{title}', '{link}', '{img}', ARRAY['{tags[0][0]}','{tags[1][0]}','{tags[2][0]}'], ARRAY[{tags[0][1]},{tags[1][1]},{tags[2][1]}])
+            on conflict(link)
+            do nothing
+            """
+        try:
+            self.execute(query)
+            self.commit()
+        except psycopg2.DatabaseError as error:
+            print(error)
+            
+    def read(self, table):
+        query = f"""select * from {table}"""
+        self.execute(query)
+        return self.cursor.fetchall()
 
-    # DB 접속
-    try:
-        with psycopg2.connect(host="255.255.255.255", port="00000", dbname="dbname", user="user", password="password") as conn:
-            with conn.cursor() as cur:
-                #title과 link 중 하나라도 같으면 DB에 추가하지 않음
-                for i in range(n):
-                    cur.execute(f"""INSERT INTO {table} (TITLE, PRICE, ITEM, CATEGORY, LINK, PICTURELINK)
-                    VALUES ('{title[i]}', '{price[i]}', '{item[i]}', '{category[i]}', '{link[i]}', '{picturelink[i]}')
-                    ON CONFLICT (LINK)
-                    DO NOTHING
-                    """)
-                
-                cur.execute(f"select * from {table}" )
-                print(f"SELECT * FROM {table}")
-                pprint(cur.fetchall())
-    except psycopg2.DatabaseError as e:
-        print(e)
+#example
+db = PostgreSQL_CRUD(host="13.72.102.220", port="5432",dbname="youtube_trend", user="admin",password="qwe123")
 
-
-#write(1,['title5'], [20], ['Galaxy tab S8 Ultra'], ['Tablet'], ['http://...0'], ['https://picture...']) 
+#schema는 db에 미리 설정
+db.create_table(schema= "KR",table="tablename")
+db.insert("KR","tablename", '제목2', '링크2','이미지2',[['비행', 7.76], ['시험', 7.76], ['파일럿', 3.88], ['상황', 3.88]])
+pprint(db.read("kr.tablename"))
