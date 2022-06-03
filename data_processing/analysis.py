@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import spacy
+import re
 
 def hfilter(s):
     return re.sub(u'[^ \.\,\?\!\u3130-\u318f\uac00-\ud7a3]+','',s)

@@ -14,21 +14,22 @@ class PostgreSQL_CRUD():
         self.cursor.execute(query)
     def commit(self):
         self.connect.commit()
-    
-    def create_table(self, table):
-        query = f'''create table {table} (
+
+    def create_table(self, schema, table):
+        query = f'''create table {schema}.{table} (
             title varchar(255),
             link varchar(255) unique,
             img varchar(255),
-            tag varchar(16)[]
+            tag varchar(16)[],
+            tag_weight real[]
         );'''
         self.execute(query)
         self.commit()
-        return table
+        return f"{schema}.{table}"
 
-    def insert(self, table, title, link, img, tag):
-        query = f"""insert into {table} (title, link, img, tag)
-            values('{title}', '{link}', '{img}', ARRAY['{tag[0]}','{tag[1]}','{tag[2]}'])
+    def insert(self, schema, table, title, link, img, tags):
+        query = f"""insert into {schema}.{table} (title, link, img, tag, tag_weight)
+            values('{title}', '{link}', '{img}', ARRAY['{tags[0][0]}','{tags[1][0]}','{tags[2][0]}'], ARRAY[{tags[0][1]},{tags[1][1]},{tags[2][1]}])
             on conflict(link)
             do nothing
             """
@@ -43,10 +44,11 @@ class PostgreSQL_CRUD():
         self.execute(query)
         return self.cursor.fetchall()
 
-        
 
+#example
 db = PostgreSQL_CRUD(host="255.255.255.255", port="00000",dbname="dbname", user="user",password="password")
-# db.create_table(table="date1")
-db.insert("date1", '제목2', '링크2','이미지2',['태그21', '태그22','태그23'])
 
-pprint(db.read("date1"))
+#schema는 db에 미리 설정
+db.create_table(schema= "KR",table="tablename")
+db.insert("KR","tablename", '제목2', '링크2','이미지2',[['비행', 7.76], ['시험', 7.76], ['파일럿', 3.88], ['상황', 3.88]])
+pprint(db.read("kr.tablename"))
