@@ -70,8 +70,8 @@ for i in tf_idf_tags:
     j += 1
 
 print(table)
-# db = PostgreSQL_CRUD(host="20.124.236.237", port="5432", dbname="youtube_trend", user="administrator", password="qwer1234")
+# db = PostgreSQL_CRUD(host="host", port="0000", dbname="dbname", user="user", password="password")
 
-# db.create_table(schema="KR", table="220604")
+# db.create_table(schema="schema", table="table")
 # for i in table:
-#     db.insert("KR", "220604", i[0], i[1], i[2], i[3])
+#     db.insert("schema", "table", i[0], i[1], i[2], i[3])
