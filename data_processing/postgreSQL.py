@@ -43,12 +43,3 @@ class PostgreSQL_CRUD():
         query = f"""select * from {table}"""
         self.execute(query)
         return self.cursor.fetchall()
-
-
-#example
-db = PostgreSQL_CRUD(host="255.255.255.255", port="00000",dbname="dbname", user="user",password="password")
-
-#schema는 db에 미리 설정
-db.create_table(schema= "KR",table="tablename")
-db.insert("KR","tablename", '제목2', '링크2','이미지2',[['비행', 7.76], ['시험', 7.76], ['파일럿', 3.88], ['상황', 3.88]])
-pprint(db.read("kr.tablename"))

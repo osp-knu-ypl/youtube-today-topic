@@ -2,6 +2,7 @@
 
 import spacy
 import re
+from konlpy.tag import Twitter
 
 def hfilter(s):
     return re.sub(u'[^ \.\,\?\!\u3130-\u318f\uac00-\ud7a3]+','',s)
@@ -9,12 +10,12 @@ def hfilter(s):
 def filter(str):
     
     word = []
-    nlp = spacy.load("ko_core_news_sm")
+    posTagger = Twitter()
     p_entry = hfilter(str)
-    doc = nlp(str)
-    p_entry2 = list(doc)
+    p_entry2 = posTagger.pos(p_entry)
+
     for i in p_entry2:
-        if i.pos_=="NOUN":
-            word.append(i)
+        if i[1] == "Noun":
+            word.append(i[0])
     
     return word
