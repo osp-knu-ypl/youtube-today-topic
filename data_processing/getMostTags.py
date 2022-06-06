@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
-from data_processing import postgreSQL
+import postgreSQL
 from pprint import pprint
 
 def get_tag(schema, table):
-    db = postgreSQL.PostgreSQL_CRUD()
+
+    db = postgreSQL.PostgreSQL_CRUD(host="", port="",dbname="", user="",password="")
     
     keywords = []
     for i in range(1,5):
@@ -14,9 +15,9 @@ def get_tag(schema, table):
     dic = {}
     for i in keywords:
         if i[0] in dic:
-            dic[i[0]] = dic.get(i[0]) + 1
+            dic[i[0]] = dic.get(i[0]) + i[1]
         else:
-            dic[i[0]] = 1
+            dic[i[0]] = i[1]
 
     best = []
     for i in range(0, 5):
