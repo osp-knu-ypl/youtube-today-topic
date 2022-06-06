@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-import postgreSQL
+from data_processing import postgreSQL
 from pprint import pprint
 
 def get_tag(schema, table):
-    db = postgreSQL.PostgreSQL_CRUD(host="", port="",dbname="", user="",password="")
+    db = postgreSQL.PostgreSQL_CRUD(host="13.72.102.220", port="5432",dbname="youtube_trend", user="admin",password="qwe123")
     
     keywords = []
     for i in range(1,5):
