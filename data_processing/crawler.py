@@ -74,4 +74,4 @@ for i in table:
 db = PostgreSQL_CRUD(host="13.72.102.220", port="5432", dbname="youtube_trend", user="admin", password="qwe123")
 db.create_table(schema=sys.argv[1], table="T"+sys.argv[2])
 for i in table:
-    db.insert(sys.argv[1], sys.argv[2], title=i[0], link=i[1], img=i[2], tags=i[3])
+    db.insert(sys.argv[1], "T"+sys.argv[2], title=i[0], link=i[1], img=i[2], tags=i[3])

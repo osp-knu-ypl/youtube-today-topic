@@ -36,11 +36,11 @@ class PostgreSQL_CRUD():
                         ARRAY[ {tags[0][1]} ,  {tags[1][1]} ,  {tags[2][1]} ,  {tags[3][1]} ])
                         on conflict(link)
                         do nothing"""
-        try:
-            self.execute(query)
-            self.commit()
-        except psycopg2.DatabaseError as error:
-            print(error)
+            try:
+                self.execute(query)
+                self.commit()
+            except psycopg2.DatabaseError as error:
+                print(error)
             
     def read(self, table):
         query = f"""select * from {table}"""
