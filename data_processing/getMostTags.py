@@ -4,11 +4,11 @@ from data_processing import postgreSQL
 from pprint import pprint
 
 def get_tag(schema, table):
-    db = postgreSQL.PostgreSQL_CRUD(host="13.72.102.220", port="5432",dbname="youtube_trend", user="admin",password="qwe123")
+    db = postgreSQL.PostgreSQL_CRUD()
     
     keywords = []
     for i in range(1,5):
-        db.execute(f"select tag[{i}], count(*) from {schema}.{table} group by tag")
+        db.execute(f"select tag[{i}], tag_weight[{i}] from {schema}.{table} where tag_weight[{i}]>6")
         keywords.extend(db.cursor.fetchall())
 
     dic = {}
