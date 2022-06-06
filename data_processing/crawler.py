@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 import requests
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
@@ -11,7 +12,7 @@ from postgreSQL import PostgreSQL_CRUD
 # video URL + Country code
 trendurl     = "https://www.youtube.com/feed/trending"
 youtube_url  = "https://www.youtube.com"
-country_code = "?gl=KR"
+country_code = "?gl=" + sys.argv[1]
 url = trendurl + country_code
 
 # page download
@@ -32,12 +33,12 @@ j = 0
 for i in titles:
     # each video
     video  = list()
-    title  = i.attrs["title"]
+    title  = analysis.titlefilter(i.attrs["title"])
     link   = i.attrs["href" ]
     i_link = link[9:]
     link   = youtube_url + link
     img    = f'https://img.youtube.com/vi/{i_link}/0.jpg'
-    tag    = analysis.filter(title)
+    tag    = analysis.filter(title, sys.argv[3])
 
     # add element
     video.append(title)
@@ -55,7 +56,7 @@ for i in titles:
 # contents anlysis
 j = 0
 for i in contents:
-    content = analysis.filter(i.text)
+    content = analysis.filter(i.text, sys.argv[3])
     tf_idf_tags[j].extend(content)
 
     if j > 48:
@@ -70,8 +71,8 @@ for i in tf_idf_tags:
     j += 1
 
 print(table)
-# db = PostgreSQL_CRUD(host="host", port="0000", dbname="dbname", user="user", password="password")
+db = PostgreSQL_CRUD(host="13.72.102.220", port="5432", dbname="youtube_trend", user="admin", password="qwe123")
 
-# db.create_table(schema="schema", table="table")
-# for i in table:
-#     db.insert("schema", "table", i[0], i[1], i[2], i[3])
+db.create_table(schema=sys.argv[1], table=sys.argv[2])
+for i in table:
+    db.insert(sys.argv[1], sys.argv[2], title=i[0], link=i[1], img=i[2], tags=i[3])
