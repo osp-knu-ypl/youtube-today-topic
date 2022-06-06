@@ -68,7 +68,7 @@ for i in tf_idf_tags:
     j += 1
 
 # table confirm
-for i in table
+for i in table:
     print(i)
 
 db = PostgreSQL_CRUD(host="13.72.102.220", port="5432", dbname="youtube_trend", user="admin", password="qwe123")
