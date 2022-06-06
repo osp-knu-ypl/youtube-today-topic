@@ -9,7 +9,7 @@ def hfilter(s):
     return re.sub(u'[^ \.\,\?\!\u3130-\u318f\uac00-\ud7a3]+','',s)
 
 # title quotes remover
-def titlefilter(s):
+def tfilter(s):
         return re.sub(u'[\"\']+','',s)
 
 # not korean asterisk remover
