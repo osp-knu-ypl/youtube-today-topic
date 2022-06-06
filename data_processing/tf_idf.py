@@ -1,8 +1,9 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from math import log
-import collections
+from math   import log
 from pprint import pprint
+import collections
 
 def analysis_content(docs):
     doc_info = {}
