@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Korea{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h1>KOREA</h1>
+<h2>Today's Topic</h2>
+
+<div>
+    <canvas id="line-chart" width="200" height="100"></canvas>
+</div>
+
+  {% for i in youtube_list%}
+  <div>
+    <img src={{i[0][2]}} alt="유튜브 이미지"/>
+    <a href={{i[0][1]}}>{{i[0][0]}}</a>
+    {{i[0][3]}}
+  </div>
+  {% endfor %}
+
+
+
+{% block script %}<script type="text/javascript">
+let rank = JSON.parse('{{rank|safe}}');
+var table_name = [];
+
+table_name.push('{{table_list[0]|safe}}');
+table_name.push('{{table_list[1]|safe}}');
+table_name.push('{{table_list[2]|safe}}');
+table_name.push('{{table_list[3]|safe}}');
+table_name.push('{{table_list[4]|safe}}');
+table_name.push('{{table_list[5]|safe}}');
+table_name.push('{{table_list[6]|safe}}');
+
+date_list = []
+for (var i = 0; i<7; i++){
+  date_list.push(table_name[i].slice(-6,-4)+'월'+table_name[i].slice(-4,-2)+'일');
+}
+
+var tags = Object.getOwnPropertyNames(rank);
+
+var list= [];
+for (var i = 0; i<tags.length; i++){
+  var key = tags[i];
+  list.push(rank[key]);
+}
+
+console.log(list);
+
+data_info = []
+for (var i = 0; i<tags.length; i++){
+  data_info.push({
+    data: list[i],
+    label: tags[i],
+    borderColor:"#" + Math.round(Math.random() * 0xffffff).toString(16),
+    fill: false,
+    tension:0
+  })
+}
+new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+      labels: date_list,
+      datasets: data_info
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Topics in Korea'
+      },
+      scales: {
+        yAxes: [{
+            ticks: {
+                display: false
+            }
+        }]
+    }
+    }
+  });</script>{% endblock %}
+{% endblock %}
