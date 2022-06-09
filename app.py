@@ -1,9 +1,8 @@
 from data_processing import getMostTags
 from flask import Flask, render_template, request
 import json
-from pprint import pprint
 
-from pytz import country_names
+
 
 from data_processing import postgreSQL
 
