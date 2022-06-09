@@ -13,14 +13,19 @@ def tfilter(s):
         return re.sub(u'[\"\']+','',s)
 
 # not korean asterisk remover
-def otherhfilter(s):
-    return re.sub('[^ a-zA-Z]','',s).strip()
+def otherhfilter(s, nacode):
+    if(nacode == "US"):
+        return re.sub('[^ a-zA-Z]','',s).strip()
+    else if(nacode == "JP"):
+        return re.sub('u[^ \u3040-\u309F\u30A0-\u30FF]','',s)
+    else:
+        return re.sub(u'[^ \@\#\$\%\&\*\(\)\=\+\_\-\.\,\?\]\[\!]'.'',s)
 
 # not korean word extraction
-def otherfilter(string, code):
+def otherfilter(string, code, nacode):
     word      = []
     nlp       = spacy.load(code)
-    p_string1 = otherhfilter(string)
+    p_string1 = otherhfilter(string, nacode)
     p_string2 = nlp(p_string1)
     p_string3 = list(p_string2)
 
@@ -31,7 +36,7 @@ def otherfilter(string, code):
     return word
 
 # word extraction
-def filter(string, code):
+def filter(string, code, nacode):
     if(code == "KR"):
         word = []
         posTagger = Twitter()
@@ -44,4 +49,4 @@ def filter(string, code):
         
         return word                                    
     else:
-        otherfilter(string, code)
+        otherfilter(string, code, nacode)
