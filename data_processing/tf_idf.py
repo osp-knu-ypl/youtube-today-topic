@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from math   import log
+from math   import log, log2, log10
 from pprint import pprint
 import collections
 
@@ -30,7 +30,10 @@ def idf(t, docs):
 def tfidf(t, d, docs):
     return tf(t,d)* idf(t, docs)
 
-def best_tags(docs):
+def tfidf_custom(t,d,docs):
+    return log2(tf(t,d)+1)/idf(t,docs)
+
+def best_tags(docs, view):
 
     N = len(docs)
     word_frequency = analysis_content(docs)
@@ -43,26 +46,40 @@ def best_tags(docs):
         d = docs[i]
         for j in range(len(word_list)):
             t = word_list[j]
-            result[-1].append(tfidf(t,d, docs))
+            temp = []
+            temp.append(tfidf(t,d,docs))
+            temp.append(tfidf_custom(t,d,docs))
+            result[-1].append(temp)
 
     best_tags = []
-    
     for i in range(N):
         best_tags.append([])
         temp = {}
         for j in range(len(word_list)):
-            if result[i][j]>0 and len(word_list[j])>1:
+            if result[i][j][0]>0 and len(word_list[j])>1:
                 temp[word_list[j]]=result[i][j]
-        sorted_temp = sorted(temp.items(), key = lambda item: item[1], reverse = True)
+        #tf-idf 순으로 정렬
+        sorted_temp = sorted(temp.items(), key = lambda item: item[1][0], reverse = True)
         try: 
             for word in sorted_temp[:4]:
                 temp = []
                 temp.append(word[0])
-                temp.append(word[1])
+                #custom tf-idf를 저장
+                temp.append(word[1][1])
                 best_tags[-1].append(temp)
         except : print("e")
 
-    for tags in best_tags:
+    for i,tags in enumerate(best_tags):
         for tag in tags:
-            tag[1] = round(tag[1],2)
+            tag[1] = round(tag[1]*log10(view[i]),2)
     return best_tags
+
+a = [['배가','부르다','a','bb','csdf','dfsd'],
+['배','가격이','비싸다','aa','b','c','abc'],
+['진짜', '사과가', '진짜', '좋다','d','adfs','df','wer'],
+['아침엔','사과가','좋다','asdf','adfsd','dafd','b','c']
+]
+
+v = [4,10,7,100]
+
+pprint(best_tags(a,v))
