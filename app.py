@@ -7,7 +7,7 @@ from pytz import country_names
 
 from data_processing import postgreSQL
 
-db = postgreSQL.PostgreSQL_CRUD()
+db = postgreSQL.PostgreSQL_CRUD(host="255.255.255.255", port="0000",dbname="dbname", user="user",password="password")
 
 def getJsonGraphData(data):
     temp = []
@@ -38,7 +38,6 @@ def getTableList(Country_Code):
     table_list =[]
     for table in db.cursor.fetchall():
         table_list.append(table[0])
-    table_list.reverse()
     return table_list
 
 
@@ -53,41 +52,124 @@ def method():
     return "method"
 
 @app.route('/Global/Korea/', methods=['GET', 'POST'])
-def korea():    
+def korea():
+    nation = 'kr'
+
     tags = []
-    table_list =getTableList('kr')
+    table_list =getTableList(nation)
 
     for table in table_list:
-        tags.append(getMostTags.get_tag('kr', table))
+        tags.append(getMostTags.get_tag(nation, table))
     rank = getJsonGraphData(tags)
 
     youtube_list = []
     for i in range(0,5):
-        db.execute(f"select * from kr.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
         youtube_list.append(db.cursor.fetchall())
     return render_template('/Global/KR.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
 
 
 @app.route('/Global/USA/', methods=['GET', 'POST'])
 def usa():
+    nation = 'us'
+
     tags = []
-    table_list =getTableList('us')
-    print(table_list)
+    table_list =getTableList(nation)
 
     for table in table_list:
-        tags.append(getMostTags.get_tag('us', table))
+        tags.append(getMostTags.get_tag(nation, table))
     rank = getJsonGraphData(tags)
-    print(rank)
 
     youtube_list = []
     for i in range(0,5):
-        db.execute(f"select * from us.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
         youtube_list.append(db.cursor.fetchall())
-    pprint(youtube_list)
+    return render_template('/Global/USA.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
 
-    return render_template('/Global/USA.html', youtube_list=youtube_list,table_list=json.dumps(table_list), rank = rank)
+@app.route('/Global/Japan/', methods=['GET', 'POST'])
+def jp():
+    nation = 'jp'
 
+    tags = []
+    table_list =getTableList(nation)
 
+    for table in table_list:
+        tags.append(getMostTags.get_tag(nation, table))
+    rank = getJsonGraphData(tags)
+
+    youtube_list = []
+    for i in range(0,5):
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        youtube_list.append(db.cursor.fetchall())
+    return render_template('/Global/JP.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
+
+@app.route('/Global/Italy/', methods=['GET', 'POST'])
+def it():
+    nation = 'it'
+
+    tags = []
+    table_list =getTableList(nation)
+
+    for table in table_list:
+        tags.append(getMostTags.get_tag(nation, table))
+    rank = getJsonGraphData(tags)
+
+    youtube_list = []
+    for i in range(0,5):
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        youtube_list.append(db.cursor.fetchall())
+    return render_template('/Global/IT.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
+
+@app.route('/Global/Greece/', methods=['GET', 'POST'])
+def gr():
+    nation = 'gr'
+
+    tags = []
+    table_list =getTableList(nation)
+
+    for table in table_list:
+        tags.append(getMostTags.get_tag(nation, table))
+    rank = getJsonGraphData(tags)
+
+    youtube_list = []
+    for i in range(0,5):
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        youtube_list.append(db.cursor.fetchall())
+    return render_template('/Global/GR.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
+
+@app.route('/Global/France/', methods=['GET', 'POST'])
+def fr():
+    nation = 'fr'
+
+    tags = []
+    table_list =getTableList(nation)
+
+    for table in table_list:
+        tags.append(getMostTags.get_tag(nation, table))
+    rank = getJsonGraphData(tags)
+
+    youtube_list = []
+    for i in range(0,5):
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        youtube_list.append(db.cursor.fetchall())
+    return render_template('/Global/FR.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
+
+@app.route('/Global/Spain/', methods=['GET', 'POST'])
+def es():
+    nation = 'es'
+
+    tags = []
+    table_list =getTableList(nation)
+
+    for table in table_list:
+        tags.append(getMostTags.get_tag(nation, table))
+    rank = getJsonGraphData(tags)
+
+    youtube_list = []
+    for i in range(0,5):
+        db.execute(f"select * from {nation}.{table_list[0]} where '{tags[0][i][0]}'=any(tag)")
+        youtube_list.append(db.cursor.fetchall())
+    return render_template('/Global/ES.html', youtube_list=youtube_list,table_list=table_list, rank = rank)
 
 @app.route('/creators/', methods=['GET', 'POST'])
 def creators():
