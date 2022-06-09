@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from math   import log, log2, log10
+from math   import log, log10
 from pprint import pprint
 import collections
 
@@ -31,7 +31,7 @@ def tfidf(t, d, docs):
     return tf(t,d)* idf(t, docs)
 
 def tfidf_custom(t,d,docs):
-    return log2(tf(t,d)+1)/idf(t,docs)
+    return log(tf(t,d)+1)/idf(t,docs)
 
 def best_tags(docs, view):
 
@@ -71,15 +71,5 @@ def best_tags(docs, view):
 
     for i,tags in enumerate(best_tags):
         for tag in tags:
-            tag[1] = round(tag[1]*log10(view[i]),2)
+            tag[1] = round(tag[1] * log10(view[i]), 3)
     return best_tags
-
-a = [['배가','부르다','a','bb','csdf','dfsd'],
-['배','가격이','비싸다','aa','b','c','abc'],
-['진짜', '사과가', '진짜', '좋다','d','adfs','df','wer'],
-['아침엔','사과가','좋다','asdf','adfsd','dafd','b','c']
-]
-
-v = [4,10,7,100]
-
-pprint(best_tags(a,v))

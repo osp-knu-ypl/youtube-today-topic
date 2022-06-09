@@ -16,7 +16,6 @@ do
 	#python3 ./data_processing/crawler.py RU $vardate ru_core_news_sm
 	#python3 ./data_processing/crawler.py IT $vardate it_core_news_sm
 	#python3 ./data_processing/crawler.py GR $vardate el_core_news_sm
-	#python3 ./data_processing/crawler.py CN $vardate zh_core_news_sm
 
 	sleep 43200
 done

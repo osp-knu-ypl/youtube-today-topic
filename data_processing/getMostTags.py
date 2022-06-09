@@ -1,15 +1,16 @@
 #!/usr/bin/python
 
+from data_processing.tf_idf import best_tags
 import postgreSQL
 from pprint import pprint
 
 def get_tag(schema, table):
 
-    db = postgreSQL.PostgreSQL_CRUD(host="", port="",dbname="", user="",password="")
+    db = postgreSQL.PostgreSQL_CRUD(host="13.72.102.220", port="5432",dbname="youtube_trend", user="admin",password="qwe123")
     
     keywords = []
     for i in range(1,5):
-        db.execute(f"select tag[{i}], tag_weight[{i}] from {schema}.{table} where tag_weight[{i}]>6")
+        db.execute(f"select tag[{i}], tag_weight[{i}] from {schema}.{table} where tag_weight[{i}]>0.3")
         keywords.extend(db.cursor.fetchall())
 
     dic = {}
@@ -18,7 +19,7 @@ def get_tag(schema, table):
             dic[i[0]] = dic.get(i[0]) + i[1]
         else:
             dic[i[0]] = i[1]
-
+    print(dic)
     best = []
     for i in range(0, 5):
         maxkey = max(dic, key = dic.get)
