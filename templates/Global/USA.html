@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
-{% block title %}Korea{% endblock %}
+{% block title %}USA{% endblock %}
 {% block head %}
 {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Korea</h1>
+<h1>United state of America</h1>
 <h2>Today's Topic</h2>
 
 <div>
     <canvas id="line-chart" width="200" height="100"></canvas>
 </div>
 
-  {% for i in youtube_list%}
+{% for i in youtube_list%}
   <div>
     <img src={{i[0][2]}} alt="유튜브 이미지"/>
     <a href={{i[0][1]}}>{{i[0][0]}}</a>
@@ -67,7 +67,7 @@ new Chart(document.getElementById("line-chart"), {
     options: {
       title: {
         display: true,
-        text: 'Topics in Korea'
+        text: 'Topics in USA'
       },
       scales: {
         yAxes: [{
